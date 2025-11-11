@@ -10,7 +10,7 @@ import (
 
 type Wmenu struct {
 	command string
-	items   []Item
+	items   []string
 	opts    WmenuOptions
 }
 
@@ -37,7 +37,7 @@ type WmenuOptions struct {
 	CustomArgs               []string               // Custom arguments if more are needed
 }
 
-func NewWmenu(opts WmenuOptions, items ...Item) Wmenu {
+func NewWmenu(opts WmenuOptions, items ...string) Wmenu {
 	return Wmenu{
 		command: "wmenu",
 		items:   items,
@@ -46,7 +46,7 @@ func NewWmenu(opts WmenuOptions, items ...Item) Wmenu {
 }
 
 // AddItems implements Gmenu.
-func (w *Wmenu) AddItems(items ...Item) {
+func (w *Wmenu) AddItems(items ...string) {
 	w.items = append(w.items, items...)
 }
 
@@ -91,10 +91,10 @@ func (w *Wmenu) GetPrompt() (string, []string) {
 	// Prompt
 	if w.opts.Prompt != nil {
 		if w.opts.Prompt.BackgroundColor != nil {
-			args = append(args, fmt.Sprint("-M ", w.opts.Prompt.BackgroundColor.getHex()))
+			args = append(args, fmt.Sprintf("-M \"%v\"", w.opts.Prompt.BackgroundColor.getHex()))
 		}
 		if w.opts.Prompt.ForegroundColor != nil {
-			args = append(args, fmt.Sprint("-m ", w.opts.Prompt.ForegroundColor.getHex()))
+			args = append(args, fmt.Sprintf("-m \"%v\"", w.opts.Prompt.ForegroundColor.getHex()))
 		}
 		if w.opts.Prompt.Prompt != "" {
 			args = append(args, fmt.Sprint("-p ", w.opts.Prompt.Prompt))
@@ -103,16 +103,16 @@ func (w *Wmenu) GetPrompt() (string, []string) {
 
 	// Colors
 	if w.opts.BackgroundColor != nil {
-		args = append(args, fmt.Sprint("-N ", w.opts.BackgroundColor.getHex()))
+		args = append(args, fmt.Sprintf("-N \"%v\"", w.opts.BackgroundColor.getHex()))
 	}
 	if w.opts.ForegroundColor != nil {
-		args = append(args, fmt.Sprint("-n ", w.opts.ForegroundColor.getHex()))
+		args = append(args, fmt.Sprintf("-n \"%v\"", w.opts.ForegroundColor.getHex()))
 	}
 	if w.opts.BackgroundColorSelection != nil {
-		args = append(args, fmt.Sprint("-S ", w.opts.BackgroundColorSelection.getHex()))
+		args = append(args, fmt.Sprintf("-S \"%v\"", w.opts.BackgroundColorSelection.getHex()))
 	}
 	if w.opts.ForegroundColorSelection != nil {
-		args = append(args, fmt.Sprint("-s ", w.opts.ForegroundColorSelection.getHex()))
+		args = append(args, fmt.Sprintf("-s \"%v\"", w.opts.ForegroundColorSelection.getHex()))
 	}
 
 	args = append(args, w.opts.CustomArgs...)
@@ -121,7 +121,7 @@ func (w *Wmenu) GetPrompt() (string, []string) {
 }
 
 // PromptUser implements Gmenu.
-func (w *Wmenu) PromptUser() (*Item, error) {
+func (w *Wmenu) PromptUser() (*string, error) {
 	items := ""
 	for i, item := range w.items {
 		items += string(item)
@@ -135,7 +135,7 @@ func (w *Wmenu) PromptUser() (*Item, error) {
 		return nil, err
 	}
 
-	item := Item(strings.TrimSuffix(outS, "\n"))
+	item := strings.TrimSuffix(outS, "\n")
 	if slices.Contains(w.items, item) {
 		return &item, nil
 	}
@@ -144,7 +144,7 @@ func (w *Wmenu) PromptUser() (*Item, error) {
 }
 
 // SetItems implements Gmenu.
-func (w *Wmenu) SetItems(items ...Item) {
+func (w *Wmenu) SetItems(items ...string) {
 	w.items = items
 }
 
