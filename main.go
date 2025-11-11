@@ -32,8 +32,6 @@ func pipeInput(input string, command string, args ...string) (string, error) {
 	cmd.Stdout = &stdout
 	cmd.Stderr = &stderr
 
-	fmt.Println(cmd.String())
-
 	if err := cmd.Run(); err != nil {
 		return "", fmt.Errorf("command execution failed: %v\nStderr: %s", err, stderr.String())
 	}

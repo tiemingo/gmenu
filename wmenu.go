@@ -71,7 +71,26 @@ func (w *Wmenu) GetPrompt() (string, []string) {
 
 	// Font
 	if w.opts.Font != nil {
-		args = append(args, fmt.Sprint("-f ", w.opts.Font.ToString()))
+		args = append(args, "-f")
+		args = append(args, fmt.Sprint(w.opts.Font.ToString()))
+	}
+
+	// Colors
+	if w.opts.BackgroundColor != nil {
+		args = append(args, "-N")
+		args = append(args, fmt.Sprint(w.opts.BackgroundColor.getHex()))
+	}
+	if w.opts.ForegroundColor != nil {
+		args = append(args, "-n")
+		args = append(args, fmt.Sprint(w.opts.ForegroundColor.getHex()))
+	}
+	if w.opts.BackgroundColorSelection != nil {
+		args = append(args, "-S")
+		args = append(args, fmt.Sprint(w.opts.BackgroundColorSelection.getHex()))
+	}
+	if w.opts.ForegroundColorSelection != nil {
+		args = append(args, "-s")
+		args = append(args, fmt.Sprint(w.opts.ForegroundColorSelection.getHex()))
 	}
 
 	// Lines
@@ -81,38 +100,29 @@ func (w *Wmenu) GetPrompt() (string, []string) {
 	if w.opts.MaxLines > 0 && w.opts.Lines > w.opts.MaxLines {
 		w.opts.Lines = w.opts.MaxLines
 	}
-	args = append(args, fmt.Sprintf("-l %v", w.opts.Lines))
+	args = append(args, "-l")
+	args = append(args, fmt.Sprint(w.opts.Lines))
 
 	// Output
 	if w.opts.Output != "" {
-		args = append(args, fmt.Sprint("-o ", w.opts.Output))
+		args = append(args, "-o")
+		args = append(args, fmt.Sprint(w.opts.Output))
 	}
 
 	// Prompt
 	if w.opts.Prompt != nil {
 		if w.opts.Prompt.BackgroundColor != nil {
-			args = append(args, fmt.Sprintf("-M \"%v\"", w.opts.Prompt.BackgroundColor.getHex()))
+			args = append(args, "-M")
+			args = append(args, fmt.Sprint(w.opts.Prompt.BackgroundColor.getHex()))
 		}
 		if w.opts.Prompt.ForegroundColor != nil {
-			args = append(args, fmt.Sprintf("-m \"%v\"", w.opts.Prompt.ForegroundColor.getHex()))
+			args = append(args, "-m")
+			args = append(args, fmt.Sprint(w.opts.Prompt.ForegroundColor.getHex()))
 		}
 		if w.opts.Prompt.Prompt != "" {
-			args = append(args, fmt.Sprint("-p ", w.opts.Prompt.Prompt))
+			args = append(args, "-p")
+			args = append(args, fmt.Sprint(w.opts.Prompt.Prompt))
 		}
-	}
-
-	// Colors
-	if w.opts.BackgroundColor != nil {
-		args = append(args, fmt.Sprintf("-N \"%v\"", w.opts.BackgroundColor.getHex()))
-	}
-	if w.opts.ForegroundColor != nil {
-		args = append(args, fmt.Sprintf("-n \"%v\"", w.opts.ForegroundColor.getHex()))
-	}
-	if w.opts.BackgroundColorSelection != nil {
-		args = append(args, fmt.Sprintf("-S \"%v\"", w.opts.BackgroundColorSelection.getHex()))
-	}
-	if w.opts.ForegroundColorSelection != nil {
-		args = append(args, fmt.Sprintf("-s \"%v\"", w.opts.ForegroundColorSelection.getHex()))
 	}
 
 	args = append(args, w.opts.CustomArgs...)
