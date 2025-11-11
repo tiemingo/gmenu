@@ -142,6 +142,9 @@ func (w *Wmenu) PromptUser() (*string, error) {
 	_, args := w.GetPrompt()
 	outS, err := pipeInput(items, w.command, args...)
 	if err != nil {
+		if strings.HasSuffix(err.Error(), "Stderr: ") {
+			return nil, nil
+		}
 		return nil, err
 	}
 
