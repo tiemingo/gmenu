@@ -2,7 +2,6 @@ package gmenu
 
 import (
 	"fmt"
-	"slices"
 	"strings"
 
 	"github.com/gotk3/gotk3/pango"
@@ -149,10 +148,7 @@ func (w *Wmenu) PromptUser() (*string, error) {
 	}
 
 	item := strings.TrimSuffix(outS, "\n")
-	if slices.Contains(w.items, item) {
-		return &item, nil
-	}
-	return nil, nil
+	return &item, nil
 
 }
 
