@@ -130,7 +130,7 @@ func (w *Wmenu) PromptUser() (*string, error) {
 		}
 	}
 	_, args := w.GetPrompt()
-	outS, err := pipeImput(items, w.command, args...)
+	outS, err := pipeInput(items, w.command, args...)
 	if err != nil {
 		return nil, err
 	}
@@ -150,5 +150,5 @@ func (w *Wmenu) SetItems(items ...string) {
 
 // Version implements Gmenu.
 func (w *Wmenu) Version() (string, error) {
-	return pipeImput("", w.command, "-v")
+	return pipeInput("", w.command, "-v")
 }

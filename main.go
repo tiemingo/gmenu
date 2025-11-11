@@ -22,7 +22,7 @@ type Gmenu interface {
 	Version() (string, error)      // Return the version of the menu or an error if the execution failed.
 }
 
-func pipeImput(input string, command string, args ...string) (string, error) {
+func pipeInput(input string, command string, args ...string) (string, error) {
 	inputData := []byte(input)
 
 	cmd := exec.Command(command, args...)
