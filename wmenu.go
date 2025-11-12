@@ -2,6 +2,7 @@ package gmenu
 
 import (
 	"fmt"
+	"os/exec"
 	"strings"
 
 	"github.com/gotk3/gotk3/pango"
@@ -36,8 +37,8 @@ type WmenuOptions struct {
 	CustomArgs               []string               // Custom arguments if more are needed
 }
 
-func NewWmenu(opts WmenuOptions, items ...string) Wmenu {
-	return Wmenu{
+func NewWmenu(opts WmenuOptions, items ...string) Gmenu {
+	return &Wmenu{
 		command: "wmenu",
 		items:   items,
 		opts:    opts,
@@ -131,17 +132,12 @@ func (w *Wmenu) GetPrompt() (string, []string) {
 
 // PromptUser implements Gmenu.
 func (w *Wmenu) PromptUser() (*string, error) {
-	items := ""
-	for i, item := range w.items {
-		items += string(item)
-		if i+1 != len(w.items) {
-			items += "\n"
-		}
-	}
+	items := getItemsString(w.items)
 	_, args := w.GetPrompt()
-	outS, err := pipeInput(items, w.command, args...)
+
+	outS, err, stderr := pipeInput(items, w.command, args...)
 	if err != nil {
-		if strings.HasSuffix(err.Error(), "Stderr: ") {
+		if exitError, ok := err.(*exec.ExitError); ok && exitError.ExitCode() == 1 && stderr == "" {
 			return nil, nil
 		}
 		return nil, err
@@ -149,7 +145,6 @@ func (w *Wmenu) PromptUser() (*string, error) {
 
 	item := strings.TrimSuffix(outS, "\n")
 	return &item, nil
-
 }
 
 // SetItems implements Gmenu.
@@ -158,6 +153,7 @@ func (w *Wmenu) SetItems(items ...string) {
 }
 
 // Version implements Gmenu.
-func (w *Wmenu) Version() (string, error) {
-	return pipeInput("", w.command, "-v")
+func (w *Wmenu) Version() (v string, err error) {
+	v, err, _ = pipeInput("", w.command, "-v")
+	return
 }

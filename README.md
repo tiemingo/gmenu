@@ -2,7 +2,7 @@
 Golang bindings for wmenu.
 
 
-# Example
+# Wmenu example
 ``` golang
 package main
 
