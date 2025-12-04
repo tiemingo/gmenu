@@ -44,3 +44,37 @@ func main() {
 	fmt.Printf("The users favorite food is %v\n", *resP)
 }
 ```
+
+# Rofi example
+```golang
+package main
+
+import (
+	"fmt"
+	"slices"
+
+	"github.com/tiemingo/gmenu"
+)
+
+func main() {
+	foodSelection := []string{
+		"Pizza", "Burger", "Curry",
+	}
+
+	gm := gmenu.NewRofi(gmenu.RofiOptions{
+		CaseInsensitive: true,
+	}, foodSelection...)
+
+	resP, err := gm.PromptUser()
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	if resP == nil || !slices.Contains(foodSelection, *resP) {
+		fmt.Println("It seems like the users favorite food isn't on the list.")
+		return
+	}
+
+	fmt.Printf("The users favorite food is %v\n", *resP)
+}
+```
