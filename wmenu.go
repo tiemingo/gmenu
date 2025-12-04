@@ -2,6 +2,7 @@ package gmenu
 
 import (
 	"fmt"
+	"os/exec"
 	"strings"
 
 	"github.com/gotk3/gotk3/pango"
@@ -25,10 +26,10 @@ type WmenuOptions struct {
 	PasswordMode             bool                   // Wmenu will not directly display the keyboard input, but instead replace it with asterisks.
 	Font                     *pango.FontDescription // Defines the font used. For more information, see https://docs.gtk.org/Pango/type_func.FontDescription.from_string.html
 	Lines                    int                    // Wmenu lists items vertically, with the given number of lines.
-	MaxLines                 int                    // Maximum amount of lines diplayed. If 0 or lower this option gets ignored.
+	MaxLines                 int                    // Maximum amount of lines displayed. If 0 or lower this option gets ignored.
 	UseItemLines             bool                   // Whether to use the amount of items to set number of lines.
 	Output                   string                 // Wmenu is displayed on the output with the given name. For example: eDP-1
-	Prompt                   *WmenuPrompt           // Display a promt with styling.
+	Prompt                   *WmenuPrompt           // Display a prompt with styling.
 	BackgroundColor          *Color                 // Defines the normal background color.
 	ForegroundColor          *Color                 // Defines the normal foreground color.
 	BackgroundColorSelection *Color                 // Defines the selection background color.
@@ -36,8 +37,8 @@ type WmenuOptions struct {
 	CustomArgs               []string               // Custom arguments if more are needed
 }
 
-func NewWmenu(opts WmenuOptions, items ...string) Wmenu {
-	return Wmenu{
+func NewWmenu(opts WmenuOptions, items ...string) Gmenu {
+	return &Wmenu{
 		command: "wmenu",
 		items:   items,
 		opts:    opts,
@@ -131,17 +132,12 @@ func (w *Wmenu) GetPrompt() (string, []string) {
 
 // PromptUser implements Gmenu.
 func (w *Wmenu) PromptUser() (*string, error) {
-	items := ""
-	for i, item := range w.items {
-		items += string(item)
-		if i+1 != len(w.items) {
-			items += "\n"
-		}
-	}
+	items := getItemsString(w.items)
 	_, args := w.GetPrompt()
-	outS, err := pipeInput(items, w.command, args...)
+
+	outS, err, stderr := pipeInput(items, w.command, args...)
 	if err != nil {
-		if strings.HasSuffix(err.Error(), "Stderr: ") {
+		if exitError, ok := err.(*exec.ExitError); ok && exitError.ExitCode() == 1 && stderr == "" {
 			return nil, nil
 		}
 		return nil, err
@@ -149,7 +145,6 @@ func (w *Wmenu) PromptUser() (*string, error) {
 
 	item := strings.TrimSuffix(outS, "\n")
 	return &item, nil
-
 }
 
 // SetItems implements Gmenu.
@@ -158,6 +153,7 @@ func (w *Wmenu) SetItems(items ...string) {
 }
 
 // Version implements Gmenu.
-func (w *Wmenu) Version() (string, error) {
-	return pipeInput("", w.command, "-v")
+func (w *Wmenu) Version() (v string, err error) {
+	v, err, _ = pipeInput("", w.command, "-v")
+	return
 }
