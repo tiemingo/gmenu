@@ -1,5 +1,5 @@
 # gmenu
-Golang bindings for wmenu.
+Golang bindings for wmenu and rofi.
 
 
 # Wmenu example
