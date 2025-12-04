@@ -24,7 +24,7 @@ func main() {
 		ForegroundColorSelection: &gmenu.Color{R: 0, G: 0, B: 0, A: 255},
 		ForegroundColor:          &gmenu.Color{R: 0, G: 0, B: 0, A: 255},
 		Prompt: &gmenu.WmenuPrompt{
-			Prompt:          "What's your favourite food?",
+			Prompt:          "What's your favorite food?",
 			BackgroundColor: &gmenu.Color{R: 255, G: 170, B: 0, A: 255},
 		},
 		Font:         pango.FontDescriptionFromString("Cantarell Italic Bold 12"),
@@ -37,10 +37,10 @@ func main() {
 		return
 	}
 	if resP == nil || !slices.Contains(foodSelection, *resP) {
-		fmt.Println("It seems like the users favourite food isn't on the list.")
+		fmt.Println("It seems like the users favorite food isn't on the list.")
 		return
 	}
 
-	fmt.Printf("The users favourite food is %v\n", *resP)
+	fmt.Printf("The users favorite food is %v\n", *resP)
 }
 ```
