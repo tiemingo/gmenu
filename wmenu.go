@@ -26,10 +26,10 @@ type WmenuOptions struct {
 	PasswordMode             bool                   // Wmenu will not directly display the keyboard input, but instead replace it with asterisks.
 	Font                     *pango.FontDescription // Defines the font used. For more information, see https://docs.gtk.org/Pango/type_func.FontDescription.from_string.html
 	Lines                    int                    // Wmenu lists items vertically, with the given number of lines.
-	MaxLines                 int                    // Maximum amount of lines diplayed. If 0 or lower this option gets ignored.
+	MaxLines                 int                    // Maximum amount of lines displayed. If 0 or lower this option gets ignored.
 	UseItemLines             bool                   // Whether to use the amount of items to set number of lines.
 	Output                   string                 // Wmenu is displayed on the output with the given name. For example: eDP-1
-	Prompt                   *WmenuPrompt           // Display a promt with styling.
+	Prompt                   *WmenuPrompt           // Display a prompt with styling.
 	BackgroundColor          *Color                 // Defines the normal background color.
 	ForegroundColor          *Color                 // Defines the normal foreground color.
 	BackgroundColorSelection *Color                 // Defines the selection background color.

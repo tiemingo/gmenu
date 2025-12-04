@@ -24,7 +24,7 @@ func pipeInput(input string, command string, args ...string) (string, error, str
 	return stdout.String(), nil, ""
 }
 
-// Returns RGBA formated as hex
+// Returns RGBA formatted as hex
 func (c *Color) getHex() string {
 	return fmt.Sprintf("%02x%02x%02x%02x", c.R, c.G, c.B, c.A)
 }
